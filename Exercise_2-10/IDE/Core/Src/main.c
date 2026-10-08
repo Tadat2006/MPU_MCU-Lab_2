@@ -132,6 +132,7 @@ void updateLEDMatrix(int index);
 void matrixScanTask(void);
 void loadLetterA(void);
 void shiftMatrixLeft(void);
+void shiftMatrixRight(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -902,16 +903,34 @@ void loadLetterA(void)
 
 void shiftMatrixLeft(void)
 {
-    for (int i = 0; i < MAX_LED_MATRIX - 1; i++)
-        matrix_buffer[i] = matrix_buffer[i + 1];
+    for (int i = 7; i > 0; i--)
+    {
+        matrix_buffer[i] = matrix_buffer[i - 1];
+    }
 
-    matrix_buffer[MAX_LED_MATRIX - 1] = 0x00;
+    matrix_buffer[0] = 0x00;
+
     matrix_shift_count++;
 
-    /* Reload A after it has shifted completely out of the matrix. */
-    if (matrix_shift_count >= MAX_LED_MATRIX)
+    if (matrix_shift_count >= 8)
+    {
         loadLetterA();
+    }
 }
+
+
+void shiftMatrixRight(void)
+{
+	for (int i = 0; i < MAX_LED_MATRIX - 1; i++)
+	        matrix_buffer[i] = matrix_buffer[i + 1];
+
+	    matrix_buffer[MAX_LED_MATRIX - 1] = 0x00;
+	    matrix_shift_count++;
+
+	    /* Reload A after it has shifted completely out of the matrix. */
+	    if (matrix_shift_count >= MAX_LED_MATRIX)
+	        loadLetterA();
+	}
 /* USER CODE END 4 */
 
 /**
